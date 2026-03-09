@@ -6,6 +6,6 @@ module rom(
 
   reg [31: 0] rom_reg [0: 1023];
 
-  assign data = rom_reg[romaddr_in[31: 2]];
+  assign romdata_out = rom_reg[romaddr_in[11: 2]];   //地址宽度需随情况修改
 
 endmodule
