@@ -8,9 +8,9 @@ module inst_decoder(
   output [6: 0] funct7_out,
   output [11: 0] Iimm_out,
   output [11: 0] Simm_out,
-  output [11: 0] Bimm_out,
+  output [12: 0] Bimm_out,
   output [19: 0] Uimm_out,
-  output [19: 0] Jimm_out
+  output [20: 0] Jimm_out
 );
 
 
@@ -24,6 +24,6 @@ module inst_decoder(
   assign Simm_out = {inst_in[31: 25], inst_in[11: 7]};
   assign Bimm_out = {inst_in[31], inst_in[7], inst_in[30: 25], inst_in[11: 8], 1'b0};
   assign Uimm_out = inst_in[31: 12];
-  assign Jimm_out = {inst_in[31], inst_in[19: 12], inst_in[20], inst_in[30: 21, 1'b0]};
+  assign Jimm_out = {inst_in[31], inst_in[19: 12], inst_in[20], inst_in[30: 21], 1'b0};
 
 endmodule
