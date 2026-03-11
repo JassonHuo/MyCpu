@@ -1,27 +1,29 @@
 module alu(
-  input [31: 0] x,
-  input [31: 0] y,
-  input [3: 0] sel,
-  output reg [31: 0] z,
-  output overflow,
-  output zero
+  input [31: 0] x_in,
+  input [31: 0] y_in,
+  input [3: 0] sel_in,
+  input [4: 0] shiftbit_in,
+  output reg [31: 0] z_out,
+  output overflow_out,
+  output zero_out
 );
 
-  parameter ADD = 4'd0, SUB = 4'd1, AND = 4'd2, OR = 4'd3, XOR = 4'd4, SLL = 4'd5, SRL = 4'd6, SRA = 4'd7;
+  parameter ADD = 4'd0, SUB = 4'd1, AND = 4'd2, OR = 4'd3, XOR = 4'd4, SLL = 4'd5, SRL = 4'd6, SRA = 4'd7, 
+	SLT = 4'd8, SLTU = 4'd9;
 
-  assign zero = (z == 0);
+  assign zero_out = (z_out == 0);
 
   always@(*)begin
-	case(sel)
-	  ADD: z <= x + y;
-	  SUB: z <= x - y;
-	  AND: z <= x & y;
-	  OR: z <= x | y;
-	  XOR: z <= x ^ y;
-	  SLL: z <= ;
-	  SRL: z <= ;
-	  SRA: z <= ;
-	  default: z <= 0;
+	case(sel_in)
+	  ADD: z_out = x_in + y_in;
+	  SUB: z_out = x_in - y_in;
+	  AND: z_out = x_in & y_in;
+	  OR: z_out = x_in | y_in;
+	  XOR: z_out = x_in ^ y_in;
+	  SLL: z_out = x_in << shiftbit_in;
+	  SRL: z_out = x_in >> shiftbit_in 
+	  SRA: z_out = {x_in[31], x_in[31: 1]};
+	  default: z_out = 32'b0;
 
 	endcase
   end
