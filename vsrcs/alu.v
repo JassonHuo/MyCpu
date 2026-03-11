@@ -13,6 +13,15 @@ module alu(
 
   assign zero_out = (z_out == 0);
 
+  wire [31: 0] shift_result;
+
+  barrel_shifter bs(
+	.x_in(x_in),
+	.shiftbit_in(shiftbit_in),
+	.sel_in(sel_in),
+	.z_out(shift_result)
+  );
+
   always@(*)begin
 	case(sel_in)
 	  ADD: z_out = x_in + y_in;
@@ -20,9 +29,7 @@ module alu(
 	  AND: z_out = x_in & y_in;
 	  OR: z_out = x_in | y_in;
 	  XOR: z_out = x_in ^ y_in;
-	  SLL: z_out = x_in << shiftbit_in;
-	  SRL: z_out = x_in >> shiftbit_in 
-	  SRA: z_out = {x_in[31], x_in[31: 1]};
+	  SLL, SRL, SRA: z_out = shift_result;
 	  default: z_out = 32'b0;
 
 	endcase
