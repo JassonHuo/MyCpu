@@ -12,7 +12,41 @@ module ex(
   input [20: 0] Jimm_in
 );
 
+  always@(*)begin
+	case(opcode)
+	  //LUI
+	  7'b0110111:begin
+	  end
+	  //AUIPC
+	  
+	  //JAL
+	  
+	  //JALR
+	  7'b1100111:begin
+	  end 
+	  //BEQ-BGEU
 
+	  //LB-LHU
+	  7'b0000011:begin
+	  end
+	  //SB-SW
+	  7'b0100011:begin
+	  end
+	  //ADDI-ANDI
+	  7'b0010011:begin
+	  end
+	  //SLLI-SRAI
 
+	  //ADD-AND
+	  7'b0110011:begin
+	  end
+	  //FENCE-PAUSE
+
+	  //ECALL-EBREAK
+
+	  default:
+
+	endcase
+  end
 
 endmodule
