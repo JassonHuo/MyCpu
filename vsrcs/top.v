@@ -126,4 +126,14 @@ module top(
 	.pcchan_out(pc_chan)
   );	
 
+  alu arithlu(
+	.x_in(rs1num),
+	.y_in(rs2num),
+	.sel_in(),
+	.shiftbit_in(),
+	.z_out(alunum),
+	.overflow_out(),
+	.zero_out(),
+  );
+
 endmodule
