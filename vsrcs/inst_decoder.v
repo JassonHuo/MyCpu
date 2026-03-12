@@ -1,19 +1,22 @@
 module inst_decoder(
+  //from if
   input [31: 0] inst_in,
   input [31: 0] pc_in,
+  //to ex
   output [31: 0] pc_out,
   output [31: 0] inst_out,
   output [6: 0] opcode_out,
   output [4: 0] rd_out,
   output [2: 0] funct3_out,
-  output [4: 0] rs1_out,
-  output [4: 0] rs2_out,
   output [6: 0] funct7_out,
   output [11: 0] Iimm_out,
   output [11: 0] Simm_out,
   output [12: 0] Bimm_out,
   output [19: 0] Uimm_out,
   output [20: 0] Jimm_out
+  //to gpr
+  output [4: 0] rs1_out,
+  output [4: 0] rs2_out,
 );
 
 

@@ -1,10 +1,14 @@
 module gpr(
+  //from clk
   input clk,
+  //from id
   input [4: 0] readaddr1_in,
   input [4: 0] readaddr2_in,
+  //from wb
   input wen,
   input [4: 0] wriaddr_in,
   input [31: 0] wridata_in,
+  //to ex
   output [31: 0] readdata1_out,
   output [31: 0] readdata2_out
 );

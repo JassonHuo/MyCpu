@@ -1,12 +1,15 @@
 module ram(
+  //from clk
+  input clk,
+  //from mem
   input [31: 0] ramaddr_in,
   input [31: 0] ramdata_in,
   input bt0en_in,
   input bt1en_in,
   input bt2en_in,
   input bt3en_in,
-  input clk,
   input readen_in,
+  //to mem
   output reg [31: 0] ramdata_out
 );
 

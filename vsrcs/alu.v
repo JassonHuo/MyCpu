@@ -1,8 +1,10 @@
 module alu(
+  //from ex
   input [31: 0] x_in,
   input [31: 0] y_in,
   input [3: 0] sel_in,
   input [4: 0] shiftbit_in,
+  //to ex
   output reg [31: 0] z_out,
   output overflow_out,
   output zero_out

@@ -1,22 +1,21 @@
 module ex(
+  //from id
   input [31: 0] inst_in,
   input [31: 0] pc_in,
   input [6: 0] opcode_in,
   input [4: 0] rd_in,
   input [2: 0] funct3_in,
-  input [31: 0] rs1num_in,
-  input [31: 0] rs2num_in,
   input [6: 0] funct7_in,
   input [11: 0] Iimm_in,
   input [11: 0] Simm_in,
   input [12: 0] Bimm_in,
   input [19: 0] Uimm_in,
   input [20: 0] Jimm_in,
-  output reg wen,
-  output reg [31: 0] rs1num_out,
-  output reg [31: 0] rs2num_out,
-  input [31: 0] alunum_in,
-  output reg [31: 0] rdnum_out,
+  input [6: 0] funct7_in,
+  //from gpr
+  input [31: 0] rs1num_in,
+  input [31: 0] rs2num_in,
+  //to mem
   output reg bt0en_out,
   output reg bt1en_out,
   output reg bt2en_out,
@@ -24,17 +23,26 @@ module ex(
   output reg readen_out,
   output reg [31: 0] ramaddr_out,
   output reg [31: 0] ramdata_out,
+ 
+  output reg wen,
+  output reg [31: 0] rdnum_out,
   output reg [4: 0] rd_out,
   output reg pcen_out,	
   output reg [31: 0]pcchan_out,
   output reg [31: 0] pc_out,
   output reg [31: 0] inst_out
+
+  //to alu
+  output reg [31: 0] opnum1_out,
+  output reg [31: 0] opnum2_out,
+  //from alu
+  input [31: 0] alunum_in,
 );
 
   always@(*)begin
 	wen = 1'b0;
-	rs1num_out = 32'b0;
-	rs2num_out = 32'b0;
+	opnum1_out = 32'b0;
+	opnum2_out = 32'b0;
 	rdnum_out = 32'b0;
 	bt0en_out = 1'b0;
 	bt1en_out = 1'b0;

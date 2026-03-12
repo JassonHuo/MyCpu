@@ -1,5 +1,7 @@
 module rom(
+  //from if
   input [31: 0] romaddr_in,
+  //to if
   output [31: 0] romdata_out
 );
 
