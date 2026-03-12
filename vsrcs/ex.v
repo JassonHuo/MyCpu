@@ -26,7 +26,9 @@ module ex(
   output reg [31: 0] ramdata_out,
   output reg [4: 0] rd_out,
   output reg pcen_out,	
-  output reg [31: 0]pcchan_out
+  output reg [31: 0]pcchan_out,
+  output reg [31: 0] pc_out,
+  output reg [31: 0] inst_out
 );
 
   always@(*)begin
