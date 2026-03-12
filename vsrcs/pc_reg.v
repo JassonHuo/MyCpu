@@ -1,8 +1,11 @@
 module pc_reg(
+  //from btm clk
   input clk,
   input rst,
+  //from wb
   input [31: 0] pcchan_in,
   input pcen_in,
+  //to if
   output reg[31: 0] pc_out
 );
 
