@@ -1,6 +1,5 @@
 module rom(
   input [31: 0] romaddr_in,
-  input clk,
   output [31: 0] romdata_out
 );
 
