@@ -26,6 +26,7 @@ module mem(
   output [31: 0] pcchan_out,
 
   output [31: 0] data_from_ram_out, 
+  output isfromram_out
   //to ram
   output bt0en_out,
   output bt1en_out,

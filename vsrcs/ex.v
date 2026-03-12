@@ -11,7 +11,6 @@ module ex(
   input [12: 0] Bimm_in,
   input [19: 0] Uimm_in,
   input [20: 0] Jimm_in,
-  input [6: 0] funct7_in,
   //from gpr
   input [31: 0] rs1num_in,
   input [31: 0] rs2num_in,
@@ -30,13 +29,13 @@ module ex(
   output reg pcen_out,	
   output reg [31: 0]pcchan_out,
   output reg [31: 0] pc_out,
-  output reg [31: 0] inst_out
+  output reg [31: 0] inst_out,
 
   //to alu
   output reg [31: 0] opnum1_out,
   output reg [31: 0] opnum2_out,
   //from alu
-  input [31: 0] alunum_in,
+  input [31: 0] alunum_in
 );
 
   always@(*)begin
