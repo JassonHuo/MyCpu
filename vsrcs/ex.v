@@ -34,9 +34,17 @@ module ex(
   //to alu
   output reg [31: 0] opnum1_out,
   output reg [31: 0] opnum2_out,
+  output reg [3: 0] sel_out,
+  output reg [4: 0] shiftbit_out, 
   //from alu
   input [31: 0] alunum_in
 );
+
+  parameter ADD = 4'd0, SUB = 4'd1, AND = 4'd2, OR = 4'd3, XOR = 4'd4, SLL = 4'd5, SRL = 4'd6, SRA = 4'd7, 
+	SLT = 4'd8, SLTU = 4'd9;
+
+  assign pc_out = pc_in;
+  assign inst_out = inst_in;  
 
   always@(*)begin
 	wen = 1'b0;
@@ -53,6 +61,8 @@ module ex(
 	rd_out = 5'b0;
 	pcen_out = 1'b0;
 	pcchan_out = 32'b0;
+	sel_out = 4'b0;
+	shiftbit_out = 5'b0;
 	case(opcode_in)
 	  //LUI
 	  7'b0110111:begin
@@ -61,12 +71,15 @@ module ex(
 		wen = 1;
 	  end
 	  //AUIPC
-	  
+
 	  //JAL
 	  
 	  //JALR
 	  7'b1100111:begin
-		pcchan_out = {{20{Iimm_in[11]}}, Iimm_in[11: 1], 1'b0};
+		opnum1_out = rs1num_in;
+		opnum2_out = {{20{Iimm_in[11]}}, Iimm_in} & 32'hFFFFFFFE;
+		sel_out = ADD;
+		pcchan_out = alunum_in;
 		pcen_out = 1;
 		wen = 1;
 		rdnum_out = pc_in + 4;
@@ -76,15 +89,68 @@ module ex(
 
 	  //LB-LHU
 	  7'b0000011:begin
+		case(funct3_in)		  
+		  3'b000: begin	  //lb
+		  end
+		  3'b001: begin   //lh
+		  end
+		  3'b010: begin	  //lw
+		  end
+		  3'b100: begin	  //lbu
+		  end
+		  3'b101: begin	  //lhu
+		  end
+		  default: begin
+		  end
+		endcase
 	  end
 	  //SB-SW
 	  7'b0100011:begin
 	  end
-	  //ADDI-ANDI
+	  //ADDI-SRAI
 	  7'b0010011:begin
+		rd_out = rd_in;
+		wen = 1;
+		opnum1_out = rs1num_in;
+		opnum2_out = {{20{Iimm_in[11]}}, Iimm_in};
+		rdnum_out = alunum_in;
+		case(funct3_in)
+		  3'b000: begin //addi
+			sel_out = ADD;
+		  end
+		  3'b010: begin //slti
+			sel_out = SLT;
+		  end	
+		  3'b011: begin	//sltiu
+			sel_out = SLTU;
+		  end
+		  3'b100: begin  //xori
+			sel_out = XOR;
+		  end
+		  3'b110: begin  //ori
+			sel_out = OR;
+		  end
+		  3'b111: begin //andi
+			sel_out = AND;
+		  end
+		  3'b001: begin //slli
+			sel_out = SLL;
+			shiftbit_out = Iimm_in[4: 0];
+		  end
+		  3'b101: begin
+			shiftbit_out = Iimm_in[4: 0];
+			if(Iimm_in[11: 5] == 7'b0)
+			  sel_out = SRL;
+			else
+			  sel_out = SRA;
+		  end
+		  default: begin
+			sel_out = 0;
+			shiftbit_out = 0;
+			rdnum_out = 0;
+		  end
+		endcase
 	  end
-	  //SLLI-SRAI
-
 	  //ADD-AND
 	  7'b0110011:begin
 	  end
