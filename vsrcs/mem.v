@@ -15,7 +15,6 @@ module mem(
   input [31: 0] pcchan_in,
   input [31: 0] pc_in,
   input [31: 0] inst_in,
-
   //to wb
   output [31: 0] pc_out,
   output [31: 0] inst_out,
@@ -26,7 +25,8 @@ module mem(
   output [31: 0] pcchan_out,
 
   output [31: 0] data_from_ram_out, 
-  output isfromram_out
+  output isfromram_out,
+
   //to ram
   output bt0en_out,
   output bt1en_out,
