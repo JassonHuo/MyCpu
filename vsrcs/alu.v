@@ -14,7 +14,6 @@ module alu(
 	SLT = 4'd8, SLTU = 4'd9;
 
   assign zero_out = (z_out == 0);
-
   wire [31: 0] shift_result;
 
   barrel_shifter bs(
@@ -32,6 +31,8 @@ module alu(
 	  OR: z_out = x_in | y_in;
 	  XOR: z_out = x_in ^ y_in;
 	  SLL, SRL, SRA: z_out = shift_result;
+	  SLT: z_out = {31'b0, ($signed(x_in) < $signed(y_in))};
+	  SLTU: z_out = {31'b0, (x_in < y_in)};
 	  default: z_out = 32'b0;
 
 	endcase
