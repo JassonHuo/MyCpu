@@ -22,6 +22,8 @@ module ex(
   output reg readen_out,
   output reg [31: 0] ramaddr_out,
   output reg [31: 0] ramdata_out,    //when change ram num
+  output reg [1: 0] load_width_out,			//0: byte 1: half 2:full
+  output reg is_sign_extend_out,			//judge the sign-extend or not
  
   output reg wen,
   output reg [31: 0] rdnum_out,
@@ -65,6 +67,8 @@ module ex(
 	sel_out = 4'b0;
 	shiftbit_out = 5'b0;
 	isfromram_out = 1'b0;
+	load_width_out = 2'b0;
+	is_sign_extend_out = 1'b0;
 	case(opcode_in)
 	  //LUI
 	  7'b0110111:begin
@@ -91,21 +95,26 @@ module ex(
 
 	  //LB-LHU
 	  7'b0000011:begin
+		  readen_out = 1'b1;
+		  opnum1_out = rs1num_in;
+		  opnum2_out = {{20{Iimm_in[11]}}, Iimm_in};
+		  sel_out = ADD;
+		  ramaddr_out = alunum_in;	
+		  wen = 1'b1;
+		  isfromram_out = 1'b1;
+		  is_sign_extend_out = 1'b0;
 		case(funct3_in)		  
 		  3'b000: begin	  //lb
 		  end
 		  3'b001: begin   //lh
 		  end
 		  3'b010: begin	  //lw
-			readen_out = 1'b1;
-			opnum1_out = rs1num_in;
-			opnum2_out = {{20{Iimm_in[11]}}, Iimm_in};
-			sel_out = ADD;
-			ramaddr_out = alunum_in;	
-			wen = 1'b1;
-			isfromram_out = 1'b1;
+			load_width_out = 2'b10;
+			is_sign_extend_out = 1'b0;
 		  end
 		  3'b100: begin	  //lbu
+			load_width_out = 2'b00;
+			is_sign_extend_out = 1'b0;
 		  end
 		  3'b101: begin	  //lhu
 		  end
@@ -115,6 +124,41 @@ module ex(
 	  end
 	  //SB-SW
 	  7'b0100011:begin
+		opnum1_out = rs1num_in;
+		opnum2_out = {{20{Iimm_in[11]}}, Iimm_in};
+		sel_out = ADD;
+		ramaddr_out = alunum_in;
+		bt0en_out = 1'b0;
+		bt1en_out = 1'b0;
+		bt2en_out = 1'b0;
+		bt3en_out = 1'b0;
+		ramdata_out = rs2num_in;
+		case(funct3_in)
+		  3'b000:begin	//sb
+			case(ramaddr_out[1: 0])
+			  2'b00: bt0en_out = 1'b1;
+			  2'b01: bt1en_out = 1'b1;
+			  2'b10: bt2en_out = 1'b1;
+			  2'b11: bt3en_out = 1'b1;
+			  default:begin
+				bt0en_out = 1'b0;
+				bt1en_out = 1'b0;
+				bt2en_out = 1'b0;
+				bt3en_out = 1'b0;
+			  end
+			endcase	  
+		  end
+		  3'b001:begin  //sh
+		  end
+		  3'b010:begin  //sw
+			bt0en_out = 1'b1;
+			bt1en_out = 1'b1;
+			bt2en_out = 1'b1;
+			bt3en_out = 1'b1;
+		  end
+		  default:begin
+		  end
+		endcase
 	  end
 	  //ADDI-SRAI
 	  7'b0010011:begin
