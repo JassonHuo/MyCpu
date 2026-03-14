@@ -21,7 +21,7 @@ module ex(
   output reg bt3en_out,
   output reg readen_out,
   output reg [31: 0] ramaddr_out,
-  output reg [31: 0] ramdata_out,
+  output reg [31: 0] ramdata_out,    //when change ram num
  
   output reg wen,
   output reg [31: 0] rdnum_out,
@@ -30,6 +30,7 @@ module ex(
   output reg [31: 0]pcchan_out,
   output reg [31: 0] pc_out,
   output reg [31: 0] inst_out,
+  output isfromram_out,
 
   //to alu
   output reg [31: 0] opnum1_out,
@@ -63,6 +64,7 @@ module ex(
 	pcchan_out = 32'b0;
 	sel_out = 4'b0;
 	shiftbit_out = 5'b0;
+	isfromram_out = 1'b0;
 	case(opcode_in)
 	  //LUI
 	  7'b0110111:begin
@@ -95,6 +97,13 @@ module ex(
 		  3'b001: begin   //lh
 		  end
 		  3'b010: begin	  //lw
+			readen_out = 1'b1;
+			opnum1_out = rs1num_in;
+			opnum2_out = {{20{Iimm_in[11]}}, Iimm_in};
+			sel_out = ADD;
+			ramaddr_out = alunum_in;	
+			wen = 1'b1;
+			isfromram_out = 1'b1;
 		  end
 		  3'b100: begin	  //lbu
 		  end
