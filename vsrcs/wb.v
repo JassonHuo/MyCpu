@@ -16,7 +16,9 @@ module wb(
   output [4: 0] rd_out,
   //to pc
   output pcen_out,
-  output [31: 0] pcchan_out	
+  output [31: 0] pcchan_out,
+
+  output pc_out
 );
 
   assign wen_out = wen_in;

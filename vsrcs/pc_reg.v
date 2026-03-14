@@ -9,7 +9,7 @@ module pc_reg(
   output reg[31: 0] pc_out
 );
 
-  always@(posedge clk)begin
+  always@(posedge clk or posedge rst)begin
 	if(rst == 1)
 	  pc_out <= 0;
 	else if(pcen_in == 1)

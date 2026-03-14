@@ -5,15 +5,12 @@ module alu(
   input [3: 0] sel_in,
   input [4: 0] shiftbit_in,
   //to ex
-  output reg [31: 0] z_out,
-  output overflow_out,
-  output zero_out
+  output reg [31: 0] z_out
 );
 
   parameter ADD = 4'd0, SUB = 4'd1, AND = 4'd2, OR = 4'd3, XOR = 4'd4, SLL = 4'd5, SRL = 4'd6, SRA = 4'd7, 
 	SLT = 4'd8, SLTU = 4'd9;
 
-  assign zero_out = (z_out == 0);
   wire [31: 0] shift_result;
 
   barrel_shifter bs(

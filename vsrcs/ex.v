@@ -107,16 +107,20 @@ module ex(
 		  3'b000: begin	  //lb
 		  end
 		  3'b001: begin   //lh
+			load_width_out = 2'b01;
+			is_sign_extend_out = 1'b1;
 		  end
 		  3'b010: begin	  //lw
 			load_width_out = 2'b10;
-			is_sign_extend_out = 1'b0;
+			is_sign_extend_out = 1'b1;
 		  end
 		  3'b100: begin	  //lbu
 			load_width_out = 2'b00;
 			is_sign_extend_out = 1'b0;
 		  end
 		  3'b101: begin	  //lhu
+			load_width_out = 2'b10;
+			is_sign_extend_out = 1'b0;
 		  end
 		  default: begin
 		  end

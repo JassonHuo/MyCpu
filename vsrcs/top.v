@@ -1,6 +1,8 @@
 module top(
   input clk,
-  input rst
+  input rst,
+  output pc
+
 );
 
   wire [31: 0] pcchan_wbpc;
@@ -196,7 +198,7 @@ module top(
 	.bt2en_in(bt2en_memram),
 	.bt3en_in(bt3en_memram),
 	.readen_in(readen_memram),
-	.ramdata_out(ramdata_memram)
+	.ramdata_out(data_from_ram_rammem)
   );
 
   wb wb0(
@@ -213,7 +215,8 @@ module top(
 	.rdnum_out(rdnum_wbgpr),
 	.rd_out(rd_wbgpr),
 	.pcen_out(pcen_wbpc),
-	.pcchan_out(pcchan_wbpc)
+	.pcchan_out(pcchan_wbpc),
+	.pc_out(pc)
   );
 
   gpr gpr0(
@@ -225,5 +228,13 @@ module top(
 	.wridata_in(rdnum_wbgpr),
 	.readdata1_out(rs1num_gprex),
 	.readdata2_out(rs2num_gprex)
+  );
+
+  alu alu0(
+	.x_in(opnum1_exalu),
+	.y_in(opnum2_exalu),
+	.sel_in(sel_exalu),
+	.shiftbit_in(shiftbit_exalu),
+	.z_out(alunum_aluex)
   );
 endmodule
