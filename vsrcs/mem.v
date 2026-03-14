@@ -15,6 +15,7 @@ module mem(
   input [31: 0] pcchan_in,
   input [31: 0] pc_in,
   input [31: 0] inst_in,
+  input isfromram_in,
   //to wb
   output [31: 0] pc_out,
   output [31: 0] inst_out,
@@ -55,5 +56,6 @@ module mem(
   assign ramaddr_out = ramaddr_in;
   assign ramdata_out = ramdata_in;
   assign data_from_ram_out = data_from_ram_in;
+  assign isfromram_out = isfromram_in;
 
 endmodule
