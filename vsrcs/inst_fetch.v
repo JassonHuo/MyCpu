@@ -3,11 +3,11 @@ module inst_fetch(
   input [31: 0] pc_in,
   //to id
   output [31: 0] inst_out,
-  output [31: 0] pc_out
+  output [31: 0] pc_out,
   //to rom
   output [31: 0] romaddr_out,
   //from rom
-  input [31: 0] romdata_in,
+  input [31: 0] romdata_in
 );
 
   assign romaddr_out = pc_in;

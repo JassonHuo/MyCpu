@@ -32,7 +32,7 @@ module ex(
   output reg [31: 0]pcchan_out,
   output reg [31: 0] pc_out,
   output reg [31: 0] inst_out,
-  output isfromram_out,
+  output reg isfromram_out,
 
   //to alu
   output reg [31: 0] opnum1_out,

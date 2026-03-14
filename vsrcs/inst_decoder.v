@@ -13,10 +13,10 @@ module inst_decoder(
   output [11: 0] Simm_out,
   output [12: 0] Bimm_out,
   output [19: 0] Uimm_out,
-  output [20: 0] Jimm_out
+  output [20: 0] Jimm_out,
   //to gpr
   output [4: 0] rs1_out,
-  output [4: 0] rs2_out,
+  output [4: 0] rs2_out
 );
 
 
