@@ -7,6 +7,8 @@ module mem(
   input readen_in,
   input [31: 0] ramaddr_in,
   input [31: 0] ramdata_in,
+  input [1: 0] load_width_in,
+  input is_sign_extend_in,
 
   input wen,
   input [31: 0] rdnum_in,
@@ -25,7 +27,7 @@ module mem(
   output pcen_out,
   output [31: 0] pcchan_out,
 
-  output [31: 0] data_from_ram_out, 
+  output reg [31: 0] data_from_ram_out, 
   output isfromram_out,
 
   //to ram
@@ -55,7 +57,29 @@ module mem(
   assign readen_out = readen_in;
   assign ramaddr_out = ramaddr_in;
   assign ramdata_out = ramdata_in;
-  assign data_from_ram_out = data_from_ram_in;
   assign isfromram_out = isfromram_in;
+
+  always@(*)begin
+	case(load_width_in)
+	  2'b0:begin
+		case(ramaddr_in[1: 0])
+		  2'b00: data_from_ram_out = {{24{is_sign_extend_in && data_from_ram_in[7]}}, data_from_ram_in[7: 0]};
+		  2'b01: data_from_ram_out = {{24{is_sign_extend_in && data_from_ram_in[15]}}, data_from_ram_in[15: 8]};
+		  2'b10: data_from_ram_out = {{24{is_sign_extend_in && data_from_ram_in[23]}}, data_from_ram_in[23: 16]};
+		  2'b11: data_from_ram_out = {{24{is_sign_extend_in && data_from_ram_in[31]}}, data_from_ram_in[31: 24]};
+		  default: data_from_ram_out = 32'b0;
+		endcase
+	  end		
+	  2'b1:begin
+		case(ramaddr_in[1])
+		  1'b0: data_from_ram_out = {{16{is_sign_extend_in && data_from_ram_in[15]}}, data_from_ram_in[15: 0]};
+		  1'b1: data_from_ram_out = {{16{is_sign_extend_in && data_from_ram_in[31]}}, data_from_ram_in[31: 16]};	  
+		  default: data_from_ram_out = 32'b0;
+		endcase
+	  end
+	  2'b10: data_from_ram_out = data_from_ram_in;
+	  default: data_from_ram_out = 32'b0;
+	endcase
+  end
 
 endmodule
