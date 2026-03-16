@@ -103,6 +103,7 @@ module ex(
 		  wen = 1'b1;
 		  isfromram_out = 1'b1;
 		  is_sign_extend_out = 1'b0;
+		  rd_out = rd_in;
 		case(funct3_in)		  
 		  3'b000: begin	  //lb
 		  end
@@ -210,6 +211,34 @@ module ex(
 	  end
 	  //ADD-AND
 	  7'b0110011:begin
+		opnum1_out = rs1num_in;
+		opnum2_out = rs2num_in;
+		rdnum_out = alunum_in;
+		rd_out = rd_in;
+		case(funct3_in)
+		  3'b000:begin  //add sub
+			if(funct7_in == 7'b0)
+			  sel_out = ADD;
+			else 
+			  sel_out = SUB;
+		  end 
+		  3'b001:begin	//sll
+		  end
+		  3'b010:begin	//slt
+		  end
+		  3'b011:begin  //sltu
+		  end
+		  3'b100:begin	//xor
+		  end
+		  3'b101:begin	//srl sra
+		  end
+		  3'b110:begin //or
+		  end
+		  3'b111:begin	  //and
+		  end
+		  default:begin
+		  end
+		endcase
 	  end
 	  //FENCE-PAUSE
 
