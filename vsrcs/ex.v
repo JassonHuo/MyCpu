@@ -120,7 +120,7 @@ module ex(
 			is_sign_extend_out = 1'b0;
 		  end
 		  3'b101: begin	  //lhu
-			load_width_out = 2'b10;
+			load_width_out = 2'b01;
 			is_sign_extend_out = 1'b0;
 		  end
 		  default: begin
@@ -130,16 +130,16 @@ module ex(
 	  //SB-SW
 	  7'b0100011:begin
 		opnum1_out = rs1num_in;
-		opnum2_out = {{20{Iimm_in[11]}}, Iimm_in};
+		opnum2_out = {{20{Simm_in[11]}}, Simm_in};
 		sel_out = ADD;
 		ramaddr_out = alunum_in;
 		bt0en_out = 1'b0;
 		bt1en_out = 1'b0;
 		bt2en_out = 1'b0;
 		bt3en_out = 1'b0;
-		ramdata_out = rs2num_in;
 		case(funct3_in)
 		  3'b000:begin	//sb
+			ramdata_out = {4{rs2num_in[7: 0]}};
 			case(ramaddr_out[1: 0])
 			  2'b00: bt0en_out = 1'b1;
 			  2'b01: bt1en_out = 1'b1;
@@ -160,6 +160,7 @@ module ex(
 			bt1en_out = 1'b1;
 			bt2en_out = 1'b1;
 			bt3en_out = 1'b1;
+			ramdata_out = rs2num_in;
 		  end
 		  default:begin
 		  end
@@ -215,6 +216,7 @@ module ex(
 		opnum2_out = rs2num_in;
 		rdnum_out = alunum_in;
 		rd_out = rd_in;
+		wen = 1'b1;
 		case(funct3_in)
 		  3'b000:begin  //add sub
 			if(funct7_in == 7'b0)
