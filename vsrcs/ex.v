@@ -1,6 +1,5 @@
 module ex(
   //from id
-  input [31: 0] inst_in,
   input [31: 0] pc_in,
   input [6: 0] opcode_in,
   input [4: 0] rd_in,
@@ -30,8 +29,6 @@ module ex(
   output reg [4: 0] rd_out,
   output reg pcen_out,	
   output reg [31: 0]pcchan_out,
-  output reg [31: 0] pc_out,
-  output reg [31: 0] inst_out,
   output reg isfromram_out,
 
   //to alu
@@ -45,9 +42,6 @@ module ex(
 
   parameter ADD = 4'd0, SUB = 4'd1, AND = 4'd2, OR = 4'd3, XOR = 4'd4, SLL = 4'd5, SRL = 4'd6, SRA = 4'd7, 
 	SLT = 4'd8, SLTU = 4'd9;
-
-  assign pc_out = pc_in;
-  assign inst_out = inst_in;  
 
   always@(*)begin
 	wen = 1'b0;

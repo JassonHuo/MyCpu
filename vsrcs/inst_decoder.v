@@ -4,7 +4,6 @@ module inst_decoder(
   input [31: 0] pc_in,
   //to ex
   output [31: 0] pc_out,
-  output [31: 0] inst_out,
   output [6: 0] opcode_out,
   output [4: 0] rd_out,
   output [2: 0] funct3_out,
@@ -33,6 +32,5 @@ module inst_decoder(
   assign Jimm_out = {inst_in[31], inst_in[19: 12], inst_in[20], inst_in[30: 21], 1'b0};
 
   assign pc_out = pc_in;
-  assign inst_out = inst_in;
 
 endmodule

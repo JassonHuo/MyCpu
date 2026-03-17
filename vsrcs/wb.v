@@ -1,7 +1,5 @@
 module wb(
   //from mem
-  input [31: 0] pc_in,
-  input [31: 0] inst_in,
   input wen_in,
   input [31: 0] rdnum_in,
   input [4: 0] rd_in,
@@ -16,9 +14,8 @@ module wb(
   output [4: 0] rd_out,
   //to pc
   output pcen_out,
-  output [31: 0] pcchan_out,
+  output [31: 0] pcchan_out
 
-  output pc_out
 );
 
   assign wen_out = wen_in;

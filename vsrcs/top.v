@@ -1,8 +1,6 @@
 module top(
   input clk,
-  input rst,
-  output pc
-
+  input rst
 );
 
   wire [31: 0] pcchan_wbpc;
@@ -13,7 +11,6 @@ module top(
   wire [31: 0] romaddr_ifrom;
   wire [31: 0] romdata_romif;
   wire [31: 0] pc_idex;
-  wire [31: 0] inst_idex;
   wire [6: 0] opcode_idex;
   wire [4: 0] rd_idex;
   wire [2: 0] funct3_idex;
@@ -42,8 +39,6 @@ module top(
   wire [4: 0] rd_exmem;
   wire pcen_exmem;
   wire [31: 0] pcchan_exmem;
-  wire [31: 0] pc_exmem;
-  wire [31: 0] inst_exmem;
   wire isfromram_exmem;
 
   wire [31: 0] opnum1_exalu;
@@ -52,8 +47,6 @@ module top(
   wire [4: 0] shiftbit_exalu;
 
   wire [31: 0] alunum_aluex;
-  wire [31: 0] pc_memwb;
-  wire [31: 0] inst_memwb;
   wire wen_memwb;
   wire [31: 0] rdnum_memwb;
   wire [4: 0] rd_memwb;
@@ -100,7 +93,6 @@ module top(
 	.inst_in(inst_ifid),
 	.pc_in(pc_ifid),
 	.pc_out(pc_idex),
-	.inst_out(inst_idex),
 	.opcode_out(opcode_idex),
 	.rd_out(rd_idex),
 	.funct3_out(funct3_idex),
@@ -115,7 +107,6 @@ module top(
   );
 
   ex ex0(
-	.inst_in(inst_idex),
 	.pc_in(pc_idex),
 	.opcode_in(opcode_idex),
 	.rd_in(rd_idex),
@@ -142,8 +133,6 @@ module top(
 	.rd_out(rd_exmem),
 	.pcen_out(pcen_exmem),
 	.pcchan_out(pcchan_exmem),
-	.pc_out(pc_exmem),
-	.inst_out(inst_exmem),
 	.isfromram_out(isfromram_exmem),
 	.opnum1_out(opnum1_exalu),
 	.opnum2_out(opnum2_exalu),
@@ -167,11 +156,7 @@ module top(
 	.rd_in(rd_exmem),
 	.pcen_in(pcen_exmem),
 	.pcchan_in(pcchan_exmem),
-	.pc_in(pc_exmem),
-	.inst_in(inst_exmem),
 	.isfromram_in(isfromram_exmem),
-	.pc_out(pc_memwb),
-	.inst_out(inst_memwb),
 	.wen_out(wen_memwb),
 	.rdnum_out(rdnum_memwb),
 	.rd_out(rd_memwb),
@@ -202,8 +187,6 @@ module top(
   );
 
   wb wb0(
-	.pc_in(pc_memwb),
-	.inst_in(inst_memwb),
 	.wen_in(wen_memwb),
 	.rdnum_in(rdnum_memwb),
 	.rd_in(rd_memwb),
@@ -215,8 +198,7 @@ module top(
 	.rdnum_out(rdnum_wbgpr),
 	.rd_out(rd_wbgpr),
 	.pcen_out(pcen_wbpc),
-	.pcchan_out(pcchan_wbpc),
-	.pc_out(pc)
+	.pcchan_out(pcchan_wbpc)
   );
 
   gpr gpr0(

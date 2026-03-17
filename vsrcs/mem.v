@@ -15,12 +15,8 @@ module mem(
   input [4: 0] rd_in,
   input pcen_in,
   input [31: 0] pcchan_in,
-  input [31: 0] pc_in,
-  input [31: 0] inst_in,
   input isfromram_in,
   //to wb
-  output [31: 0] pc_out,
-  output [31: 0] inst_out,
   output wen_out,
   output [31: 0] rdnum_out,
   output [4: 0] rd_out,
@@ -42,8 +38,6 @@ module mem(
   input [31: 0] data_from_ram_in
 );
 
-  assign pc_out = pc_in;
-  assign inst_out = inst_in;
   assign wen_out = wen;
   assign rdnum_out = rdnum_in;
   assign rd_out = rd_in;
