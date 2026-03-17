@@ -22,8 +22,9 @@ module alu(
 
   always@(*)begin
 	case(sel_in)
-	  ADD: z_out = x_in + y_in;
-	  SUB: z_out = x_in - y_in;
+//	  ADD: z_out = x_in + y_in;
+//	  SUB: z_out = x_in - y_in;
+	  ADD, SUB: z_out = x_in + (y_in ^ {32{sel_in[0]}}) + sel_in[0];
 	  AND: z_out = x_in & y_in;
 	  OR: z_out = x_in | y_in;
 	  XOR: z_out = x_in ^ y_in;
