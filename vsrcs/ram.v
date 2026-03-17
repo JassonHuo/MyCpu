@@ -13,11 +13,11 @@ module ram(
   output reg [31: 0] ramdata_out
 );
 
-  initial begin
-	$readmemb("sum.bin", ram_reg);
-  end
-
   reg [31: 0] ram_reg [0: 131072];   //需根据需求调整
+
+  initial begin
+	$readmemh("/home/jasonhuo/my_cpu/vsrcs/firm_sum.hex", ram_reg);
+  end
   
   always@(*)begin
 	if(readen_in)
@@ -36,6 +36,5 @@ module ram(
 	if(bt3en_in)
 	  ram_reg[ramaddr_in[19: 2]][31: 24] <= ramdata_in[31: 24];
   end
-
 
 endmodule
