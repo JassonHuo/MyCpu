@@ -67,6 +67,12 @@ module top(
   wire [31: 0] rdnum_wbgpr;
   wire [4: 0] rd_wbgpr;
 
+  wire equal_aluex;
+  wire signedless_aluex;
+  wire unsignedless_aluex;
+  wire signedbig_aluex;
+  wire unsignedbig_aluex;
+
 
   pc_reg pc0(
 	.clk(clk),
@@ -138,7 +144,12 @@ module top(
 	.opnum2_out(opnum2_exalu),
 	.sel_out(sel_exalu),
 	.shiftbit_out(shiftbit_exalu),
-	.alunum_in(alunum_aluex)
+	.alunum_in(alunum_aluex),
+	.equal_in(equal_aluex),
+	.signedless_in(signedless_aluex),
+	.unsignedless_in(unsignedless_aluex),
+	.signedbig_in(signedbig_aluex),
+	.unsignedbig_in(unsignedbig_aluex)
   );
 
   mem mem0(
@@ -217,6 +228,11 @@ module top(
 	.y_in(opnum2_exalu),
 	.sel_in(sel_exalu),
 	.shiftbit_in(shiftbit_exalu),
-	.z_out(alunum_aluex)
+	.z_out(alunum_aluex),
+	.equal_out(equal_aluex),
+	.signedless_out(signedless_aluex),
+	.unsignedless_out(unsignedless_aluex),
+	.signedbig_out(signedbig_aluex),
+	.unsignedbig_out(unsignedbig_aluex)
   );
 endmodule

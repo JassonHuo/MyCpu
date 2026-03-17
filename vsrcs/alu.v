@@ -5,13 +5,24 @@ module alu(
   input [3: 0] sel_in,
   input [4: 0] shiftbit_in,
   //to ex
-  output reg [31: 0] z_out
+  output reg [31: 0] z_out,
+  output equal_out,
+  output signedless_out,
+  output unsignedless_out,
+  output signedbig_out,
+  output unsignedbig_out
 );
 
   parameter ADD = 4'd0, SUB = 4'd1, AND = 4'd2, OR = 4'd3, XOR = 4'd4, SLL = 4'd5, SRL = 4'd6, SRA = 4'd7, 
 	SLT = 4'd8, SLTU = 4'd9;
 
   wire [31: 0] shift_result;
+
+  assign equal_out = (x_in == y_in);
+  assign signedless_out = ($signed(x_in) < $signed(y_in));
+  assign unsignedless_out = (x_in < y_in);
+  assign signedbig_out = ($signed(x_in) > $signed(y_in));
+  assign unsignedbig_out = (x_in > y_in);
 
   barrel_shifter bs(
 	.x_in(x_in),

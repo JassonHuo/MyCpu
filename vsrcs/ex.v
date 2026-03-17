@@ -37,7 +37,12 @@ module ex(
   output reg [3: 0] sel_out,
   output reg [4: 0] shiftbit_out, 
   //from alu
-  input [31: 0] alunum_in
+  input [31: 0] alunum_in,
+  input equal_in,
+  input signedless_in,
+  input unsignedless_in,
+  input signedbig_in,
+  input unsignedbig_in
 );
 
   parameter ADD = 4'd0, SUB = 4'd1, AND = 4'd2, OR = 4'd3, XOR = 4'd4, SLL = 4'd5, SRL = 4'd6, SRA = 4'd7, 
@@ -71,9 +76,25 @@ module ex(
 		wen = 1;
 	  end
 	  //AUIPC
-
+	  7'b0010111:begin
+		sel_out = ADD;
+		opnum1_out = {Uimm_in, 12'b0};
+		opnum2_out = pc_in;
+		rdnum_out = {alunum_in};
+		rd_out = rd_in;
+		wen = 1'b1;
+	  end
 	  //JAL
-	  
+	  7'b1101111:begin
+		opnum1_out = {{11{Jimm_in[20]}}, Jimm_in};
+		opnum2_out = pc_in;
+		wen = 1'b1;
+		rdnum_out = pc_in + 32'd4;
+		rd_out = rd_in;
+		pcen_out = 1'b1;
+		pcchan_out = alunum_in;
+		sel_out = ADD;
+	  end		
 	  //JALR
 	  7'b1100111:begin
 		opnum1_out = rs1num_in;
@@ -86,7 +107,41 @@ module ex(
 		rd_out = rd_in;
 	  end 
 	  //BEQ-BGEU
-
+	  7'b1100011:begin
+		pcen_out = 1'b0;
+		pcchan_out = 32'b0;
+		opnum1_out = rs1num_in;
+		opnum2_out = rs2num_in;
+		pcchan_out = {{18{Bimm_in[12]}}, Bimm_in} + pc_in;
+		case(funct3_in)
+		  3'b000:begin    //beq
+			if(equal_in)
+			  pcen_out = 1'b1;
+		  end
+		  3'b001:begin	  //bnq
+			if(!equal_in)
+			  pcen_out = 1'b1;
+		  end
+		  3'b100:begin	  //blt
+			if(signedless_in)
+			  pcen_out = 1'b1;
+		  end
+		  3'b101:begin	  //bge
+			if(signedbig_in)
+			  pcen_out = 1'b1;
+		  end
+		  3'b110:begin	  //bltu
+			if(unsignedless_in)
+			  pcen_out = 1'b1;
+		  end
+		  3'b111:begin	  //bgeu
+			if(unsignedbig_in)
+			  pcen_out = 1'b1;
+		  end
+		  default:begin
+		  end
+		endcase
+	  end
 	  //LB-LHU
 	  7'b0000011:begin
 		  readen_out = 1'b1;
@@ -100,6 +155,8 @@ module ex(
 		  rd_out = rd_in;
 		case(funct3_in)		  
 		  3'b000: begin	  //lb
+			load_width_out = 2'b0;
+			is_sign_extend_out = 1'b1;
 		  end
 		  3'b001: begin   //lh
 			load_width_out = 2'b01;
@@ -148,6 +205,17 @@ module ex(
 			endcase	  
 		  end
 		  3'b001:begin  //sh
+			ramdata_out = {2{rs2num_in[15: 0]}};
+			case(ramaddr_out[1])
+			  1'b0:begin
+				bt0en_out = 1'b1;
+				bt1en_out = 1'b1;
+			  end
+			  1'b1:begin
+				bt2en_out = 1'b1;
+				bt3en_out = 1'b1;
+			  end
+			endcase
 		  end
 		  3'b010:begin  //sw
 			bt0en_out = 1'b1;
@@ -219,18 +287,30 @@ module ex(
 			  sel_out = SUB;
 		  end 
 		  3'b001:begin	//sll
+			sel_out = SLL;
+			shiftbit_out = rs2num_in[4: 0];
 		  end
 		  3'b010:begin	//slt
+			sel_out = SLT;
 		  end
 		  3'b011:begin  //sltu
+			sel_out = SLTU;
 		  end
 		  3'b100:begin	//xor
+			sel_out = XOR;
 		  end
 		  3'b101:begin	//srl sra
+			shiftbit_out = rs2num_in[4: 0];
+			if(funct7_in == 7'b0)
+			  sel_out = SRL;
+			else
+			  sel_out = SRA;
 		  end
 		  3'b110:begin //or
+			sel_out = OR;
 		  end
 		  3'b111:begin	  //and
+			sel_out = AND;
 		  end
 		  default:begin
 		  end
