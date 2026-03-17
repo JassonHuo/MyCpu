@@ -1,0 +1,7 @@
+*.fst
+*.bin
+*.hex
+obj_dir
+result
+scripts
+pdk
