@@ -6,7 +6,7 @@ module barrel_shifter(
 );
 
 
-  parameter SLL = 4'd4, SRL = 4'd5, SRA = 4'd6;
+  parameter SLL = 4'd5, SRL = 4'd6, SRA = 4'd7;
   wire full;
   assign full = (sel_in == SRA && x_in[31] == 1);
 
