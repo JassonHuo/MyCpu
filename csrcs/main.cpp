@@ -10,9 +10,6 @@
 #include <fstream>
 #include <Vtop___024root.h>
 #include <sys/stat.h>
-//#include <Vtop_gpr.h>
-//#include <Vtop_rom.h>
-//#include <Vtop_top.h>
 
 
 VerilatedContext *contextp = new VerilatedContext;
