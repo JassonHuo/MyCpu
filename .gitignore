@@ -7,3 +7,6 @@ scripts
 pdk
 riscv-tests
 .gitignore
+test.py
+testprogram/
+vsrcs/demo
