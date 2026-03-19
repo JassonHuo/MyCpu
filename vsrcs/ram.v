@@ -16,7 +16,7 @@ module ram(
   reg [31: 0] ram_reg [0: 131072];   //需根据需求调整
 
   initial begin
-	$readmemh("/home/jasonhuo/my_cpu/vsrcs/firm_sum.hex", ram_reg);
+//	$readmemh("/home/jasonhuo/my_cpu/vsrcs/firm_sum.hex", ram_reg);
   end
   
   always@(*)begin
