@@ -6,24 +6,38 @@ module top(
   wire [31: 0] pcchan_wbpc;
   wire pcen_wbpc;
   wire [31: 0] pc_pcif;
-  wire [31: 0] inst_ifid;
-  wire [31: 0] pc_ifid;
+  wire [31: 0] inst_ifid_pre;
+  wire [31: 0] pc_ifid_pre;
+  wire [31: 0] inst_ifid_after;
+  wire [31: 0] pc_ifid_after;
   wire [31: 0] romaddr_ifrom;
   wire [31: 0] romdata_romif;
-  wire [31: 0] pc_idex;
-  wire [6: 0] opcode_idex;
-  wire [4: 0] rd_idex;
-  wire [2: 0] funct3_idex;
-  wire [6: 0] funct7_idex;
-  wire [11: 0] Iimm_idex;
-  wire [11: 0] Simm_idex;
-  wire [12: 0] Bimm_idex;
-  wire [19: 0] Uimm_idex;
-  wire [20: 0] Jimm_idex;
+  wire [31: 0] pc_idex_pre;
+  wire [31: 0] pc_idex_after;
+  wire [6: 0] opcode_idex_pre;
+  wire [6: 0] opcode_idex_after;
+  wire [4: 0] rd_idex_pre;
+  wire [4: 0] rd_idex_after;
+  wire [2: 0] funct3_idex_pre;
+  wire [2: 0] funct3_idex_after;
+  wire [6: 0] funct7_idex_pre;
+  wire [6: 0] funct7_idex_after;
+  wire [11: 0] Iimm_idex_pre;
+  wire [11: 0] Iimm_idex_after;
+  wire [11: 0] Simm_idex_pre;
+  wire [11: 0] Simm_idex_after;
+  wire [12: 0] Bimm_idex_pre;
+  wire [12: 0] Bimm_idex_after;
+  wire [19: 0] Uimm_idex_pre;
+  wire [19: 0] Uimm_idex_after;
+  wire [20: 0] Jimm_idex_pre;
+  wire [20: 0] Jimm_idex_after;
   wire [4: 0] rs1_idgpr;
   wire [4: 0] rs2_idgpr;
-  wire [31: 0] rs1num_gprex;
-  wire [31: 0] rs2num_gprex;
+  wire [31: 0] rs1num_gprex_pre;
+  wire [31: 0] rs2num_gprex_pre;
+  wire [31: 0] rs1num_gprex_after;
+  wire [31: 0] rs2num_gprex_after;
   wire bt0en_exmem;
   wire bt1en_exmem;
   wire bt2en_exmem;
@@ -84,10 +98,18 @@ module top(
 
   inst_fetch if0(
 	.pc_in(pc_pcif),
-	.inst_out(inst_ifid),
-	.pc_out(pc_ifid),
+	.inst_out(inst_ifid_pre),
+	.pc_out(pc_ifid_pre),
 	.romaddr_out(romaddr_ifrom),
 	.romdata_in(romdata_romif)
+  );
+
+  if_id ifid0(
+	.inst_in(inst_ifid_pre),
+	.pc_in(pc_ifid_pre),
+	.clk(clk),
+	.inst_out(inst_ifid_after),
+	.pc_out(pc_ifid_after)
   );
 
   rom rom0(
@@ -96,35 +118,63 @@ module top(
   );
 
   inst_decoder id(
-	.inst_in(inst_ifid),
-	.pc_in(pc_ifid),
-	.pc_out(pc_idex),
-	.opcode_out(opcode_idex),
-	.rd_out(rd_idex),
-	.funct3_out(funct3_idex),
-	.funct7_out(funct7_idex),
-	.Iimm_out(Iimm_idex),
-	.Simm_out(Simm_idex),
-	.Bimm_out(Bimm_idex),
-	.Uimm_out(Uimm_idex),
-	.Jimm_out(Jimm_idex),
+	.inst_in(inst_ifid_after),
+	.pc_in(pc_ifid_after),
+	.pc_out(pc_idex_pre),
+	.opcode_out(opcode_idex_pre),
+	.rd_out(rd_idex_pre),
+	.funct3_out(funct3_idex_pre),
+	.funct7_out(funct7_idex_pre),
+	.Iimm_out(Iimm_idex_pre),
+	.Simm_out(Simm_idex_pre),
+	.Bimm_out(Bimm_idex_pre),
+	.Uimm_out(Uimm_idex_pre),
+	.Jimm_out(Jimm_idex_pre),
 	.rs1_out(rs1_idgpr),
 	.rs2_out(rs2_idgpr)
   );
 
+  id_ex idex0(
+	.pc_in(pc_idex_pre),
+	.opcode_in(opcode_idex_pre),
+	.rd_in(rd_idex_pre),
+	.funct3_in(funct3_idex_pre),
+	.funct7_in(funct7_idex_pre),
+	.Iimm_in(Iimm_idex_pre),
+	.Simm_in(Simm_idex_pre),
+	.Bimm_in(Bimm_idex_pre),
+	.Uimm_in(Uimm_idex_pre),
+	.Jimm_in(Jimm_idex_pre),
+	.rs1num_in(rs1num_gprex_pre),
+	.rs2num_in(rs1num_gprex_pre),
+	.pc_out(pc_idex_after),
+	.opcode_out(opcode_idex_after),
+	.rd_out(rd_idex_after),
+	.funct3_out(funct3_idex_after),
+	.funct7_out(funct7_idex_after),
+	.Iimm_out(Iimm_idex_after),
+	.Simm_out(Simm_idex_after),
+	.Bimm_out(Bimm_idex_after),
+	.Uimm_out(Uimm_idex_after),
+	.Jimm_out(Jimm_idex_after),
+	.rs1num_out(rs1num_gprex_after),
+	.rs2num_out(rs2num_gprex_after),
+	.clk(clk)
+  );
+
   ex ex0(
-	.pc_in(pc_idex),
-	.opcode_in(opcode_idex),
-	.rd_in(rd_idex),
-	.funct3_in(funct3_idex),
-	.funct7_in(funct7_idex),
-	.Iimm_in(Iimm_idex),
-	.Simm_in(Simm_idex),
-	.Bimm_in(Bimm_idex),
-	.Uimm_in(Uimm_idex),
-	.Jimm_in(Jimm_idex),
-	.rs1num_in(rs1num_gprex),
-	.rs2num_in(rs2num_gprex),
+	.pc_in(pc_idex_after),
+	.opcode_in(opcode_idex_after),
+	.rd_in(rd_idex_after),
+	.funct3_in(funct3_idex_after),
+	.funct7_in(funct7_idex_after),
+	.Iimm_in(Iimm_idex_after),
+	.Simm_in(Simm_idex_after),
+	.Bimm_in(Bimm_idex_after),
+	.Uimm_in(Uimm_idex_after),
+	.Jimm_in(Jimm_idex_after),
+	.rs1num_in(rs1num_gprex_after),
+	.rs2num_in(rs2num_gprex_after),
 	.bt0en_out(bt0en_exmem),
 	.bt1en_out(bt1en_exmem),
 	.bt2en_out(bt2en_exmem),
@@ -219,8 +269,8 @@ module top(
 	.wen(wen_wbgpr),
 	.wriaddr_in(rd_wbgpr),
 	.wridata_in(rdnum_wbgpr),
-	.readdata1_out(rs1num_gprex),
-	.readdata2_out(rs2num_gprex)
+	.readdata1_out(rs1num_gprex_pre),
+	.readdata2_out(rs2num_gprex_pre)
   );
 
   alu alu0(

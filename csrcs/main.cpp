@@ -4,6 +4,12 @@
 #include <Vtop.h>
 #include <verilated.h>
 #include <verilated_fst_c.h>
+#include <string.h>
+#include <stdint.h>
+#include <iostream>
+#include <fstream>
+#include <Vtop___024root.h>
+#include <sys/stat.h>
 
 
 VerilatedContext *contextp = new VerilatedContext;
@@ -27,36 +33,69 @@ void one_cycle()
 
 int main(int argc, char **argv)
 {
+
+  if(argc == 1)
+  {
+	printf("you must input a program\n");
+	exit(1);
+  }
+  std::string program = argv[1];
   contextp->commandArgs(argc, argv);
+  std::ifstream file(program);
+  std::string line;
+  int addr = 0;
+  while(std::getline(file, line))
+  {
+	if(line.empty() || line[0] == '#' || line.substr(0, 2) == "//") continue;
+	uint32_t code = std::stoul(line, nullptr, 16);
+	if(addr <= 131072) top->rootp->top__DOT__rom0__DOT__rom_reg[addr++] = code;
+	else
+	{
+	  std::cout << "too many codes!!!" << std::endl;
+	  exit(1);
+	}
+  }
   top->clk = 0;
   top->rst = 0;
 
   contextp->traceEverOn(true);
   top->trace(tfp, 99);
-  tfp->open("cpu_wave.fst");
+  mkdir("waves", 0777);
+  size_t pos = program.find_last_of("/\\");
+  std::string file_name;
+  if(pos == std::string::npos) file_name = program;
+  else file_name = program.substr(pos + 1);
+  std::string wave_name = "waves/" + file_name.substr(0, file_name.find_last_of('.'))+ "_wave.fst";
+  std::cout << "Processing " << file_name;
+  tfp->open(wave_name.c_str());
 
-/*  top->rst = 1;
-  for (int i = 0; i < 10; i ++)
-  {
-	one_cycle();
-  }
-  top->rst = 0;
-  top->clk = 0;
-*/
-  int cycle = 7000;
-
+  int cycle = 10000;
+  bool pass;
   while(cycle)
   {
 	contextp->timeInc(1);
 	one_cycle();
-	cycle --;
 //	printf("%d: %d\n", 7000 - cycle, top->pc);
+	cycle--;	
+	if(top->rootp->top__DOT__gpr0__DOT__gpr_reg[3] == 1 && top->rootp->top__DOT__gpr0__DOT__gpr_reg[17] == 93 && top->rootp->top__DOT__gpr0__DOT__gpr_reg[10] == 0)
+	{
+	  std::cout << "\tPass";
+	  pass = true;
+	  break;
+	}
   }
+  if(!cycle || top->rootp->top__DOT__gpr0__DOT__gpr_reg[3] != 1 || top->rootp->top__DOT__gpr0__DOT__gpr_reg[17] != 93 || top->rootp->top__DOT__gpr0__DOT__gpr_reg[10] != 0)
+  {
+	std::cout << "\tFall";
+	pass = false;
+  }
+  std::cout << "\t" << wave_name << std::endl;
   tfp->close();
   top->final();
   delete top;
   top = nullptr;
   delete contextp;
   contextp = nullptr;
-  return 0;
+  if(pass) return 0;
+  else return 1;
 }

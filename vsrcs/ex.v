@@ -112,7 +112,7 @@ module ex(
 		pcchan_out = 32'b0;
 		opnum1_out = rs1num_in;
 		opnum2_out = rs2num_in;
-		pcchan_out = {{18{Bimm_in[12]}}, Bimm_in} + pc_in;
+		pcchan_out = {{19{Bimm_in[12]}}, Bimm_in} + pc_in;
 		case(funct3_in)
 		  3'b000:begin    //beq
 			if(equal_in)

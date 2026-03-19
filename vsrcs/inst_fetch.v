@@ -1,7 +1,7 @@
 module inst_fetch(
   //from pc
   input [31: 0] pc_in,
-  //to id
+  //to if_id
   output [31: 0] inst_out,
   output [31: 0] pc_out,
   //to rom

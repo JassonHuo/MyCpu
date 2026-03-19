@@ -13,7 +13,7 @@ module gpr(
   output [31: 0] readdata2_out
 );
 
-  reg [31: 0] gpr_reg [0: 31];
+  (* verilator public_flat_rw *) reg [31: 0] gpr_reg [0: 31];
 
   assign readdata1_out = (wriaddr_in != 0 && readaddr1_in == wriaddr_in && wen) ? (wridata_in): (readaddr1_in == 0 ? 32'b0: gpr_reg[readaddr1_in]);
   assign readdata2_out = (wriaddr_in != 0 && readaddr2_in == wriaddr_in && wen) ? (wridata_in): (readaddr2_in == 0 ? 32'b0: gpr_reg[readaddr2_in]);

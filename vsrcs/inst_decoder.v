@@ -1,8 +1,8 @@
 module inst_decoder(
-  //from if
+  //from if_id
   input [31: 0] inst_in,
   input [31: 0] pc_in,
-  //to ex
+  //to id_ex
   output [31: 0] pc_out,
   output [6: 0] opcode_out,
   output [4: 0] rd_out,
